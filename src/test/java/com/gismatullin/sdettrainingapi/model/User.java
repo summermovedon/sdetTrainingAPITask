@@ -3,13 +3,14 @@ package com.gismatullin.sdettrainingapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class User {
 
-    @JsonProperty("id")
     private int id;
 
-    @JsonProperty("email")
     private String email;
 
     @JsonProperty("first_name")
@@ -18,27 +19,6 @@ public class User {
     @JsonProperty("last_name")
     private String lastName;
 
-    @JsonProperty("avatar")
     private String avatar;
-
-    public int getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
 
 }

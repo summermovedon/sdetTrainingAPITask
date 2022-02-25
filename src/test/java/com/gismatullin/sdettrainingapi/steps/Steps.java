@@ -1,4 +1,4 @@
-package com.gismatullin.sdettrainingapi.testhelper;
+package com.gismatullin.sdettrainingapi.steps;
 
 import static io.restassured.RestAssured.given;
 
@@ -9,13 +9,21 @@ import com.gismatullin.sdettrainingapi.model.UsersDataResponse;
 
 import io.restassured.http.ContentType;
 
-public class TestHelper {
+public class Steps {
 
-    private TestHelper() {}
+    private Steps() {}
 
-    public static User searchUser(String firstName, String secondName) {
+    public static User getUser(String firstName, String secondName) {
+        UsersDataResponse response = sendUsersRequest();
+        Optional<User> userOptional = response.getUsers().stream()
+            .filter(u -> u.getFirstName().equals(firstName) && u.getLastName().equals(secondName))
+            .findFirst();
+        return userOptional.get();
+    }
+
+    public static User getUserWithPagination(String firstName, String secondName) {
         int page = 1;
-        UsersDataResponse response = sendGetUsersRequest(page);
+        UsersDataResponse response = sendUsersRequest(page);
         int totalPages = response.getTotalPages();
         Optional<User> userOptional = Optional.empty();
         while (page <= totalPages) {
@@ -25,12 +33,24 @@ public class TestHelper {
             if (userOptional.isPresent() || page == totalPages) {
                 return userOptional.get();
             }
-            response = sendGetUsersRequest(++page);
+            response = sendUsersRequest(++page);
         }
         return userOptional.get();
     }
 
-    private static UsersDataResponse sendGetUsersRequest(int page) {
+    private static UsersDataResponse sendUsersRequest() {
+        return given()
+                .baseUri("https://reqres.in/api/users")
+                .contentType(ContentType.JSON)
+            .when()
+                .get()
+            .then()
+                .statusCode(200)
+                .extract()
+                .as(UsersDataResponse.class);
+    }
+
+    private static UsersDataResponse sendUsersRequest(int page) {
         return given()
                 .baseUri("https://reqres.in/api/users")
                 .param("page", page)
