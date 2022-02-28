@@ -12,6 +12,8 @@ import io.restassured.http.ContentType;
 public class Steps {
 
     private Steps() {}
+    
+    private static final String BASE_URL = "https://reqres.in/api/users";
 
     public static User getUser(String firstName, String secondName) {
         UsersDataResponse response = sendUsersRequest();
@@ -40,7 +42,7 @@ public class Steps {
 
     private static UsersDataResponse sendUsersRequest() {
         return given()
-                .baseUri("https://reqres.in/api/users")
+                .baseUri(BASE_URL)
                 .contentType(ContentType.JSON)
             .when()
                 .get()
@@ -52,7 +54,7 @@ public class Steps {
 
     private static UsersDataResponse sendUsersRequest(int page) {
         return given()
-                .baseUri("https://reqres.in/api/users")
+                .baseUri(BASE_URL)
                 .param("page", page)
                 .contentType(ContentType.JSON)
             .when()
